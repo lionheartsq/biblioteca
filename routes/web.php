@@ -80,6 +80,13 @@ Route::group(['middleware' => ['guest']], function () {
         Route::put("/libro/deactivate", "BookController@deactivate");
         Route::put("/libro/activate", "BookController@activate");
         Route::get("/libro/selectlibros", "BookController@selectLibro");
+
+        Route::get("/prestamo", "PrestamoController@index");
+        Route::post("/prestamo/store", "PrestamoController@store");
+        Route::put("/prestamo/update", "PrestamoController@update");
+        Route::put("/prestamo/deactivate", "PrestamoController@deactivate");
+        Route::put("/prestamo/activate", "PrestamoController@activate");
+        Route::get("/prestamo/selectprestamos", "PrestamoController@selectLibro");
 //---------------------------------------------------------------------------//
 
 //accesos para los usuarios que son superadministrador

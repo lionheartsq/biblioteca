@@ -25,4 +25,8 @@
         <libros></libros>
     </template>
 
+    <template v-if="menu==6">
+        <prestamos></prestamos>
+    </template>
+
     @endsection

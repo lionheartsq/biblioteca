@@ -27,6 +27,36 @@ class BookController extends Controller
             'tb_editorial.editorial as editorial','tb_books.estado')
             ->orderBy('tb_books.id','desc')->paginate(5);
         }
+        else if ($criterio=='categoria') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_categoria.categoria', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else if ($criterio=='autor') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_autor.autor', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else if ($criterio=='editorial') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_editorial.editorial', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
         else {
             $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
             ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")

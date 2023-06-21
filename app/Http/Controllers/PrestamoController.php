@@ -7,79 +7,130 @@ use Illuminate\Http\Request;
 
 class PrestamoController extends Controller
 {
-    /**
+        /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        //if(!$request->ajax()) return redirect('/');
+        $buscar= $request->buscar;
+        $criterio= $request->criterio;
+        if ($buscar=='') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else if ($criterio=='categoria') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_categoria.categoria', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else if ($criterio=='autor') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_autor.autor', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else if ($criterio=='editorial') {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_editorial.editorial', 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+        else {
+            $libros = Tb_book::join("tb_categoria","tb_categoria.id","=","tb_books.idCategoria")
+            ->join("tb_autor","tb_autor.id","=","tb_books.idAutor")
+            ->join("tb_editorial","tb_editorial.id","=","tb_books.idEditorial")
+            ->select('tb_books.id','tb_books.codigo','tb_books.libro','tb_books.paginas','tb_books.edicion','tb_books.fechaedicion',
+            'tb_books.idCategoria','tb_categoria.categoria as categoria','tb_books.idAutor','tb_autor.autor as autor','tb_books.idEditorial',
+            'tb_editorial.editorial as editorial','tb_books.estado')
+            ->where('tb_books.'.$criterio, 'like', '%'. $buscar . '%')
+            ->orderBy('tb_books.id','desc')->paginate(5);
+        }
+
+        return [
+            'pagination' => [
+                'total'         =>$libros->total(),
+                'current_page'  =>$libros->currentPage(),
+                'per_page'      =>$libros->perPage(),
+                'last_page'     =>$libros->lastPage(),
+                'from'          =>$libros->firstItem(),
+                'to'            =>$libros->lastItem(),
+            ],
+                'libros' => $libros
+        ];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        if(!$request->ajax()) return redirect('/');
+        $libros=new Tb_book();
+        $libros->codigo=$request->codigo;
+        $libros->libro=$request->libro;
+        $libros->paginas=$request->paginas;
+        $libros->edicion=$request->edicion;
+        $libros->fechaedicion=$request->fechaedicion;
+        $libros->idCategoria=$request->idCategoria;
+        $libros->idAutor=$request->idAutor;
+        $libros->idEditorial=$request->idEditorial;
+        $libros->estado=1;
+        $libros->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tb_prestamo  $tb_prestamo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tb_prestamo $tb_prestamo)
+    public function update(Request $request)
     {
-        //
+        //if(!$request->ajax()) return redirect('/');
+        $libros=Tb_book::findOrFail($request->id);
+        $libros->codigo=$request->codigo;
+        $libros->libro=$request->libro;
+        $libros->paginas=$request->paginas;
+        $libros->edicion=$request->edicion;
+        $libros->fechaedicion=$request->fechaedicion;
+        $libros->idCategoria=$request->idCategoria;
+        $libros->idAutor=$request->idAutor;
+        $libros->idEditorial=$request->idEditorial;
+        $libros->estado=1;
+        $libros->save();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Tb_prestamo  $tb_prestamo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tb_prestamo $tb_prestamo)
+    public function deactivate(Request $request)
     {
-        //
+        if(!$request->ajax()) return redirect('/');
+        $tb_books=Tb_book::findOrFail($request->id);
+        $tb_books->estado='0';
+        $tb_books->save();
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Tb_prestamo  $tb_prestamo
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tb_prestamo $tb_prestamo)
+    public function activate(Request $request)
     {
-        //
+        if(!$request->ajax()) return redirect('/');
+        $tb_books=Tb_book::findOrFail($request->id);
+        $tb_books->estado='1';
+        $tb_books->save();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Tb_prestamo  $tb_prestamo
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tb_prestamo $tb_prestamo)
-    {
-        //
+    public function selectLibro(){
+        $libros = Tb_book::select('id as idgenLibros','codigo','libro','paginas','edicion','fechaedicion')
+        ->orderBy('autor','asc')->get();
+        return ['libros' => $libros];
     }
 }

@@ -28,6 +28,7 @@ Vue.component('editoriales', require('./components/Editoriales.vue').default);
 Vue.component('usuarios', require('./components/Usuarios.vue').default);
 Vue.component('autores', require('./components/Autores.vue').default);
 Vue.component('libros', require('./components/Libros.vue').default);
+Vue.component('prestamos', require('./components/Prestamos.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
