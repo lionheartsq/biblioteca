@@ -1,0 +1,5 @@
+[
+    {"IdRol":"1","Rol":"SuperAdministrador"},
+    {"IdRol":"2","Rol":"Administrador"},
+    {"IdRol":"3","Rol":"Usuario"}
+]
